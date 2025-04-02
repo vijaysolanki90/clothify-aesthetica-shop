@@ -44,9 +44,10 @@ const Navbar = () => {
     >
       <div className="container-custom flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="font-bold text-2xl">
-          <span className="text-brand-black">CLOTHIFY</span>
-          <span className="text-brand-gold">.</span>
+        <Link to="/" className="font-serif font-bold text-2xl tracking-wider">
+          <span className={`${isScrolled ? "text-brand-black" : "text-white"}`}>Elite</span>
+          <span className={`${isScrolled ? "text-brand-gold" : "text-brand-gold"}`}>Wear</span>
+          <span className={`${isScrolled ? "text-brand-gold" : "text-brand-gold"} text-3xl`}>.</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -60,7 +61,7 @@ const Navbar = () => {
                   ? "text-brand-gold font-bold"
                   : isScrolled
                   ? "text-brand-black hover:text-brand-gold"
-                  : "text-brand-black font-semibold hover:text-brand-gold bg-white/80 px-3 py-1 rounded-md"
+                  : "text-white font-semibold hover:text-brand-gold bg-black/20 px-3 py-1 rounded-md"
               }`}
             >
               {link.name}
