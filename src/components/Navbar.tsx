@@ -1,15 +1,36 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, Heart, Menu, X } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
+import { useWishlist } from "../contexts/WishlistContext";
+import { ShoppingBag, Heart, Menu, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import useMobile from "@/hooks/use-mobile";
 
 const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
-  const { getCartCount } = useCart();
+  const { items } = useCart();
+  const { items: wishlistItems } = useWishlist();
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const isMobile = useMobile();
+
+  const links = [
+    { name: "Home", path: "/" },
+    { name: "Collections", path: "/collections" },
+    { name: "Products", path: "/products" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    if (!isMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -24,39 +45,32 @@ const Navbar = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Close mobile menu when route changes
   useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location]);
-
-  const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Products", path: "/products" },
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
-  ];
+    setIsMenuOpen(false);
+    document.body.style.overflow = "auto";
+  }, [location.pathname]);
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled || isMobileMenuOpen ? "bg-white shadow-md py-3" : "bg-transparent py-5"
+      className={`fixed w-full z-50 transition-all duration-300 ${
+        isScrolled ? "bg-white shadow-md py-3" : "py-5 bg-white/80"
       }`}
     >
       <div className="container-custom flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="font-serif font-bold text-2xl tracking-wider">
-          <span className={`${isScrolled ? "text-brand-black" : "text-white"}`}>Elite</span>
+          <span className={`${isScrolled ? "text-brand-black" : "text-brand-black"}`}>Elite</span>
           <span className={`${isScrolled ? "text-brand-gold" : "text-brand-gold"}`}>Wear</span>
           <span className={`${isScrolled ? "text-brand-gold" : "text-brand-gold"} text-3xl`}>.</span>
         </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
+          {links.map((link) => (
             <Link
-              key={link.path}
+              key={link.name}
               to={link.path}
-              className={`text-sm font-medium transition-all duration-300 ${
+              className={`transition-colors ${
                 location.pathname === link.path
                   ? "text-brand-gold font-bold"
                   : isScrolled
@@ -69,66 +83,92 @@ const Navbar = () => {
           ))}
         </nav>
 
-        {/* Desktop Actions */}
-        <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" size="icon" className="relative bg-white/80 hover:bg-white" asChild>
-            <Link to="/wishlist">
-              <Heart className="h-5 w-5" />
-            </Link>
-          </Button>
-          <Button variant="ghost" size="icon" className="relative bg-white/80 hover:bg-white" asChild>
-            <Link to="/cart">
-              <ShoppingCart className="h-5 w-5" />
-              {getCartCount() > 0 && (
-                <span className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center rounded-full bg-brand-gold text-white text-xs">
-                  {getCartCount()}
-                </span>
-              )}
-            </Link>
+        {/* Icons */}
+        <div className="flex items-center space-x-4">
+          <Link to="/wishlist" className="relative">
+            <Heart
+              className={`h-6 w-6 ${
+                isScrolled ? "text-brand-black" : "text-brand-black"
+              }`}
+            />
+            {wishlistItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-brand-gold text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {wishlistItems.length}
+              </span>
+            )}
+          </Link>
+          <Link to="/cart" className="relative">
+            <ShoppingBag
+              className={`h-6 w-6 ${
+                isScrolled ? "text-brand-black" : "text-brand-black"
+              }`}
+            />
+            {items.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-brand-gold text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                {items.length}
+              </span>
+            )}
+          </Link>
+
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="md:hidden"
+            onClick={toggleMenu}
+          >
+            {isMenuOpen ? (
+              <X className="h-6 w-6" />
+            ) : (
+              <Menu className="h-6 w-6" />
+            )}
           </Button>
         </div>
-
-        {/* Mobile Menu Button */}
-        <button
-          className="md:hidden text-brand-black bg-white/80 p-2 rounded-md"
-          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-        >
-          {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-
-        {/* Mobile Menu */}
-        {isMobileMenuOpen && (
-          <div className="absolute top-full left-0 right-0 bg-white shadow-md md:hidden animate-fade-in">
-            <div className="container-custom py-4">
-              <nav className="flex flex-col space-y-4">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={`text-sm font-medium py-2 ${
-                      location.pathname === link.path
-                        ? "text-brand-gold font-bold"
-                        : "text-brand-black hover:text-brand-gold"
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
-                <div className="flex space-x-6 pt-4 border-t border-gray-100">
-                  <Link to="/wishlist" className="flex items-center text-sm">
-                    <Heart className="h-5 w-5 mr-2" />
-                    Wishlist
-                  </Link>
-                  <Link to="/cart" className="flex items-center text-sm">
-                    <ShoppingCart className="h-5 w-5 mr-2" />
-                    Cart ({getCartCount()})
-                  </Link>
-                </div>
-              </nav>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Mobile Navigation Menu */}
+      {isMobile && (
+        <div
+          className={`fixed inset-0 bg-white z-40 transition-transform transform duration-300 ease-in-out ${
+            isMenuOpen ? "translate-x-0" : "-translate-x-full"
+          } pt-20`}
+        >
+          <nav className="container mx-auto px-6 flex flex-col space-y-6 py-6">
+            {links.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                className={`text-xl ${
+                  location.pathname === link.path
+                    ? "text-brand-gold font-bold"
+                    : "text-brand-black"
+                }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {link.name}
+              </Link>
+            ))}
+            <div className="border-t border-gray-200 pt-6">
+              <Link
+                to="/wishlist"
+                className="flex items-center space-x-2 text-lg text-brand-black mb-4"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Heart className="h-5 w-5" />
+                <span>Wishlist ({wishlistItems.length})</span>
+              </Link>
+              <Link
+                to="/cart"
+                className="flex items-center space-x-2 text-lg text-brand-black"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ShoppingBag className="h-5 w-5" />
+                <span>Cart ({items.length})</span>
+              </Link>
+            </div>
+          </nav>
+        </div>
+      )}
     </header>
   );
 };
