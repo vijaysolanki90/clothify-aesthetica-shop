@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, Heart, Menu, X, User, Search } from "lucide-react";
+import { ShoppingCart, Heart, Menu, X } from "lucide-react";
 import { useCart } from "../contexts/CartContext";
 import { Button } from "@/components/ui/button";
 
@@ -55,12 +55,12 @@ const Navbar = () => {
             <Link
               key={link.path}
               to={link.path}
-              className={`text-sm font-medium transition-all duration-300 hover:text-brand-gold ${
+              className={`text-sm font-medium transition-all duration-300 ${
                 location.pathname === link.path
-                  ? "text-brand-gold"
+                  ? "text-brand-gold font-bold"
                   : isScrolled
-                  ? "text-brand-black"
-                  : "text-brand-black"
+                  ? "text-brand-black hover:text-brand-gold"
+                  : "text-brand-black font-semibold hover:text-brand-gold bg-white/80 px-3 py-1 rounded-md"
               }`}
             >
               {link.name}
@@ -70,12 +70,12 @@ const Navbar = () => {
 
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center space-x-4">
-          <Button variant="ghost" size="icon" className="relative" asChild>
+          <Button variant="ghost" size="icon" className="relative bg-white/80 hover:bg-white" asChild>
             <Link to="/wishlist">
               <Heart className="h-5 w-5" />
             </Link>
           </Button>
-          <Button variant="ghost" size="icon" className="relative" asChild>
+          <Button variant="ghost" size="icon" className="relative bg-white/80 hover:bg-white" asChild>
             <Link to="/cart">
               <ShoppingCart className="h-5 w-5" />
               {getCartCount() > 0 && (
@@ -89,7 +89,7 @@ const Navbar = () => {
 
         {/* Mobile Menu Button */}
         <button
-          className="md:hidden text-brand-black"
+          className="md:hidden text-brand-black bg-white/80 p-2 rounded-md"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
         >
           {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
@@ -106,8 +106,8 @@ const Navbar = () => {
                     to={link.path}
                     className={`text-sm font-medium py-2 ${
                       location.pathname === link.path
-                        ? "text-brand-gold"
-                        : "text-brand-black"
+                        ? "text-brand-gold font-bold"
+                        : "text-brand-black hover:text-brand-gold"
                     }`}
                   >
                     {link.name}
