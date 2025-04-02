@@ -23,18 +23,18 @@ const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   return (
-    <div className="product-card">
+    <div className="product-card group">
       <Link to={`/products/${product.id}`}>
         <div className="overflow-hidden">
           <img 
             src={product.image} 
             alt={product.name} 
-            className="product-card-image h-[300px] w-full object-cover"
+            className="product-card-image h-[300px] w-full object-cover group-hover:scale-105"
           />
         </div>
       </Link>
       
-      <div className="product-card-actions">
+      <div className="product-card-actions group-hover:translate-x-0 group-hover:opacity-100">
         <Button 
           size="icon" 
           variant="secondary" 
