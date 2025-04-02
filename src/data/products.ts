@@ -14,7 +14,7 @@ export const products: Product[] = [
     id: 2,
     name: "Slim Fit Black Jeans",
     price: 79.99,
-    image: "https://images.unsplash.com/photo-1541085388148-a28cfd9f4890?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
+    image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80",
     category: "Jeans",
     description: "Premium black jeans with a modern slim fit. Made with a touch of stretch for comfort and mobility throughout your day."
   },
