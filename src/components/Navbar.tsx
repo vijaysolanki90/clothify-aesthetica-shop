@@ -1,19 +1,18 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
 import { useWishlist } from "../contexts/WishlistContext";
 import { ShoppingBag, Heart, Menu, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import useMobile from "@/hooks/use-mobile";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Navbar = () => {
   const location = useLocation();
-  const { items } = useCart();
-  const { items: wishlistItems } = useWishlist();
+  const { cartItems } = useCart();
+  const { wishlistItems } = useWishlist();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isMobile = useMobile();
+  const isMobile = useIsMobile();
 
   const links = [
     { name: "Home", path: "/" },
@@ -103,9 +102,9 @@ const Navbar = () => {
                 isScrolled ? "text-brand-black" : "text-brand-black"
               }`}
             />
-            {items.length > 0 && (
+            {cartItems.length > 0 && (
               <span className="absolute -top-2 -right-2 bg-brand-gold text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
-                {items.length}
+                {cartItems.length}
               </span>
             )}
           </Link>
@@ -163,7 +162,7 @@ const Navbar = () => {
                 onClick={() => setIsMenuOpen(false)}
               >
                 <ShoppingBag className="h-5 w-5" />
-                <span>Cart ({items.length})</span>
+                <span>Cart ({cartItems.length})</span>
               </Link>
             </div>
           </nav>
