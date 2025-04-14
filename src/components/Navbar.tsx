@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useCart } from "../contexts/CartContext";
@@ -13,6 +14,7 @@ const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isMobile = useIsMobile();
+  const isHomePage = location.pathname === "/";
 
   const links = [
     { name: "Home", path: "/" },
@@ -52,15 +54,15 @@ const Navbar = () => {
   return (
     <header
       className={`fixed w-full z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-md py-3" : "py-5 bg-white/80"
+        isScrolled || !isHomePage ? "bg-white shadow-md py-3" : "py-5 bg-transparent"
       }`}
     >
       <div className="container-custom flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="font-serif font-bold text-2xl tracking-wider">
-          <span className={`${isScrolled ? "text-brand-black" : "text-brand-black"}`}>Elite</span>
-          <span className={`${isScrolled ? "text-brand-gold" : "text-brand-gold"}`}>Wear</span>
-          <span className={`${isScrolled ? "text-brand-gold" : "text-brand-gold"} text-3xl`}>.</span>
+          <span className={`${isScrolled || !isHomePage ? "text-brand-black" : "text-white"}`}>Elite</span>
+          <span className={`${isScrolled || !isHomePage ? "text-brand-gold" : "text-brand-gold"}`}>Wear</span>
+          <span className={`${isScrolled || !isHomePage ? "text-brand-gold" : "text-brand-gold"} text-3xl`}>.</span>
         </Link>
 
         {/* Desktop Navigation */}
@@ -69,12 +71,12 @@ const Navbar = () => {
             <Link
               key={link.name}
               to={link.path}
-              className={`transition-colors ${
+              className={`transition-colors font-medium ${
                 location.pathname === link.path
-                  ? "text-brand-gold font-bold"
-                  : isScrolled
+                  ? "text-brand-gold font-bold border-b-2 border-brand-gold pb-1"
+                  : isScrolled || !isHomePage
                   ? "text-brand-black hover:text-brand-gold"
-                  : "text-white font-semibold hover:text-brand-gold bg-black/20 px-3 py-1 rounded-md"
+                  : "text-white hover:text-brand-gold hover:bg-black/30 px-3 py-1 rounded-md"
               }`}
             >
               {link.name}
@@ -87,7 +89,7 @@ const Navbar = () => {
           <Link to="/wishlist" className="relative">
             <Heart
               className={`h-6 w-6 ${
-                isScrolled ? "text-brand-black" : "text-brand-black"
+                isScrolled || !isHomePage ? "text-brand-black" : "text-white"
               }`}
             />
             {wishlistItems.length > 0 && (
@@ -99,7 +101,7 @@ const Navbar = () => {
           <Link to="/cart" className="relative">
             <ShoppingBag
               className={`h-6 w-6 ${
-                isScrolled ? "text-brand-black" : "text-brand-black"
+                isScrolled || !isHomePage ? "text-brand-black" : "text-white"
               }`}
             />
             {cartItems.length > 0 && (
@@ -113,7 +115,7 @@ const Navbar = () => {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className={`md:hidden ${isScrolled || !isHomePage ? "text-brand-black" : "text-white"}`}
             onClick={toggleMenu}
           >
             {isMenuOpen ? (
@@ -139,8 +141,8 @@ const Navbar = () => {
                 to={link.path}
                 className={`text-xl ${
                   location.pathname === link.path
-                    ? "text-brand-gold font-bold"
-                    : "text-brand-black"
+                    ? "text-brand-gold font-bold border-b-2 border-brand-gold pb-1"
+                    : "text-brand-black hover:text-brand-gold"
                 }`}
                 onClick={() => setIsMenuOpen(false)}
               >
